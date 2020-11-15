@@ -59,11 +59,11 @@ use std::task::{Context, Poll};
 use std::thread;
 
 #[cfg(unix)]
-use async_io::Async;
+use superpoll_io::Async;
 #[cfg(windows)]
-use blocking::Unblock;
+use superpoll_blocking::Unblock;
 use event_listener::Event;
-use futures_lite::{future, io, prelude::*};
+use futures::{future, io, prelude::*};
 use once_cell::sync::Lazy;
 
 #[doc(no_inline)]
@@ -409,7 +409,7 @@ impl Child {
         };
 
         async move {
-            let (stdout, stderr) = future::try_zip(stdout, stderr).await?;
+            let (stdout, stderr) = future::try_join(stdout, stderr).await?;
             let status = status.await?;
             Ok(Output {
                 status,
