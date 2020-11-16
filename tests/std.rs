@@ -4,12 +4,12 @@ use std::env;
 use std::io;
 use std::str;
 
-use async_process::{Command, Output, Stdio};
-use futures_lite::{future, prelude::*};
+use superpoll_process::{Command, Output, Stdio};
+use futures::{executor, prelude::*};
 
 #[test]
 fn smoke() {
-    future::block_on(async {
+    executor::block_on(async {
         let p = if cfg!(target_os = "windows") {
             Command::new("cmd").args(&["/C", "exit 0"]).spawn()
         } else {
@@ -31,7 +31,7 @@ fn smoke_failure() {
 
 #[test]
 fn exit_reported_right() {
-    future::block_on(async {
+    executor::block_on(async {
         let p = if cfg!(target_os = "windows") {
             Command::new("cmd").args(&["/C", "exit 1"]).spawn()
         } else {
@@ -49,7 +49,7 @@ fn exit_reported_right() {
 fn signal_reported_right() {
     use std::os::unix::process::ExitStatusExt;
 
-    future::block_on(async {
+    executor::block_on(async {
         let mut p = Command::new("/bin/sh")
             .arg("-c")
             .arg("read a")
@@ -82,7 +82,7 @@ pub async fn run_output(mut cmd: Command) -> String {
 
 #[test]
 fn stdout_works() {
-    future::block_on(async {
+    executor::block_on(async {
         if cfg!(target_os = "windows") {
             let mut cmd = Command::new("cmd");
             cmd.args(&["/C", "echo foobar"]).stdout(Stdio::piped());
@@ -98,7 +98,7 @@ fn stdout_works() {
 #[test]
 #[cfg_attr(windows, ignore)]
 fn set_current_dir_works() {
-    future::block_on(async {
+    executor::block_on(async {
         let mut cmd = Command::new("/bin/sh");
         cmd.arg("-c")
             .arg("pwd")
@@ -111,7 +111,7 @@ fn set_current_dir_works() {
 #[test]
 #[cfg_attr(windows, ignore)]
 fn stdin_works() {
-    future::block_on(async {
+    executor::block_on(async {
         let mut p = Command::new("/bin/sh")
             .arg("-c")
             .arg("read line; echo $line")
@@ -140,7 +140,7 @@ fn stdin_works() {
 
 #[test]
 fn test_process_status() {
-    future::block_on(async {
+    executor::block_on(async {
         let mut status = if cfg!(target_os = "windows") {
             Command::new("cmd")
                 .args(&["/C", "exit 1"])
@@ -167,7 +167,7 @@ fn test_process_status() {
 
 #[test]
 fn test_process_output_fail_to_start() {
-    future::block_on(async {
+    executor::block_on(async {
         match Command::new("/no-binary-by-this-name-should-exist")
             .output()
             .await
@@ -180,7 +180,7 @@ fn test_process_output_fail_to_start() {
 
 #[test]
 fn test_process_output_output() {
-    future::block_on(async {
+    executor::block_on(async {
         let Output {
             status,
             stdout,
@@ -204,7 +204,7 @@ fn test_process_output_output() {
 
 #[test]
 fn test_process_output_error() {
-    future::block_on(async {
+    executor::block_on(async {
         let Output {
             status,
             stdout,
@@ -227,7 +227,7 @@ fn test_process_output_error() {
 
 #[test]
 fn test_finish_once() {
-    future::block_on(async {
+    executor::block_on(async {
         let mut prog = if cfg!(target_os = "windows") {
             Command::new("cmd").args(&["/C", "exit 1"]).spawn().unwrap()
         } else {
@@ -239,7 +239,7 @@ fn test_finish_once() {
 
 #[test]
 fn test_finish_twice() {
-    future::block_on(async {
+    executor::block_on(async {
         let mut prog = if cfg!(target_os = "windows") {
             Command::new("cmd").args(&["/C", "exit 1"]).spawn().unwrap()
         } else {
@@ -252,7 +252,7 @@ fn test_finish_twice() {
 
 #[test]
 fn test_wait_with_output_once() {
-    future::block_on(async {
+    executor::block_on(async {
         let prog = if cfg!(target_os = "windows") {
             Command::new("cmd")
                 .args(&["/C", "echo hello"])
@@ -301,7 +301,7 @@ pub fn env_cmd() -> Command {
 
 #[test]
 fn test_override_env() {
-    future::block_on(async {
+    executor::block_on(async {
         // In some build environments (such as chrooted Nix builds), `env` can
         // only be found in the explicitly-provided PATH env variable, not in
         // default places such as /bin or /usr/bin. So we need to pass through
@@ -324,7 +324,7 @@ fn test_override_env() {
 
 #[test]
 fn test_add_to_env() {
-    future::block_on(async {
+    executor::block_on(async {
         let result = env_cmd()
             .env("RUN_TEST_NEW_ENV", "123")
             .output()
@@ -342,7 +342,7 @@ fn test_add_to_env() {
 
 #[test]
 fn test_capture_env_at_spawn() {
-    future::block_on(async {
+    executor::block_on(async {
         let mut cmd = env_cmd();
         cmd.env("RUN_TEST_NEW_ENV1", "123");
 

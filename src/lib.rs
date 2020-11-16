@@ -20,8 +20,8 @@
 //! Spawn a process and collect its output:
 //!
 //! ```no_run
-//! # futures_lite::future::block_on(async {
-//! use async_process::Command;
+//! # futures::executor::block_on(async {
+//! use superpoll_process::Command;
 //!
 //! let out = Command::new("echo").arg("hello").arg("world").output().await?;
 //! assert_eq!(out.stdout, b"hello world\n");
@@ -31,9 +31,9 @@
 //! Read the output line-by-line as it gets produced:
 //!
 //! ```no_run
-//! # futures_lite::future::block_on(async {
-//! use async_process::{Command, Stdio};
-//! use futures_lite::{io::BufReader, prelude::*};
+//! # futures::executor::block_on(async {
+//! use superpoll_process::{Command, Stdio};
+//! use futures::{io::BufReader, prelude::*};
 //!
 //! let mut child = Command::new("find")
 //!     .arg(".")
@@ -101,8 +101,8 @@ impl ChildGuard {
 /// Spawn a process and wait for it to complete:
 ///
 /// ```no_run
-/// # futures_lite::future::block_on(async {
-/// use async_process::Command;
+/// # futures::executor::block_on(async {
+/// use superpoll_process::Command;
 ///
 /// Command::new("cp").arg("a.txt").arg("b.txt").status().await?;
 /// # std::io::Result::Ok(()) });
@@ -267,8 +267,8 @@ impl Child {
     /// # Examples
     ///
     /// ```no_run
-    /// # futures_lite::future::block_on(async {
-    /// use async_process::Command;
+    /// # futures::executor::block_on(async {
+    /// use superpoll_process::Command;
     ///
     /// let mut child = Command::new("ls").spawn()?;
     /// println!("id: {}", child.id());
@@ -289,8 +289,8 @@ impl Child {
     /// # Examples
     ///
     /// ```no_run
-    /// # futures_lite::future::block_on(async {
-    /// use async_process::Command;
+    /// # futures::executor::block_on(async {
+    /// use superpoll_process::Command;
     ///
     /// let mut child = Command::new("yes").spawn()?;
     /// child.kill()?;
@@ -308,8 +308,8 @@ impl Child {
     /// # Examples
     ///
     /// ```no_run
-    /// # futures_lite::future::block_on(async {
-    /// use async_process::Command;
+    /// # futures::executor::block_on(async {
+    /// use superpoll_process::Command;
     ///
     /// let mut child = Command::new("ls").spawn()?;
     ///
@@ -332,8 +332,8 @@ impl Child {
     /// # Examples
     ///
     /// ```no_run
-    /// # futures_lite::future::block_on(async {
-    /// use async_process::{Command, Stdio};
+    /// # futures::executor::block_on(async {
+    /// use superpoll_process::{Command, Stdio};
     ///
     /// let mut child = Command::new("cp")
     ///     .arg("a.txt")
@@ -373,8 +373,8 @@ impl Child {
     /// # Examples
     ///
     /// ```no_run
-    /// # futures_lite::future::block_on(async {
-    /// use async_process::{Command, Stdio};
+    /// # futures::executor::block_on(async {
+    /// use superpoll_process::{Command, Stdio};
     ///
     /// let child = Command::new("ls")
     ///     .stdout(Stdio::piped())
@@ -509,8 +509,8 @@ impl io::AsyncRead for ChildStderr {
 /// # Examples
 ///
 /// ```no_run
-/// # futures_lite::future::block_on(async {
-/// use async_process::Command;
+/// # futures::executor::block_on(async {
+/// use superpoll_process::Command;
 ///
 /// let output = if cfg!(target_os = "windows") {
 ///     Command::new("cmd").args(&["/C", "echo hello"]).output().await?
@@ -538,7 +538,7 @@ impl Command {
     /// # Examples
     ///
     /// ```
-    /// use async_process::Command;
+    /// use superpoll_process::Command;
     ///
     /// let mut cmd = Command::new("ls");
     /// ```
@@ -558,7 +558,7 @@ impl Command {
     /// # Examples
     ///
     /// ```
-    /// use async_process::Command;
+    /// use superpoll_process::Command;
     ///
     /// let mut cmd = Command::new("echo");
     /// cmd.arg("hello");
@@ -574,7 +574,7 @@ impl Command {
     /// # Examples
     ///
     /// ```
-    /// use async_process::Command;
+    /// use superpoll_process::Command;
     ///
     /// let mut cmd = Command::new("echo");
     /// cmd.args(&["hello", "world"]);
@@ -596,7 +596,7 @@ impl Command {
     /// # Examples
     ///
     /// ```
-    /// use async_process::Command;
+    /// use superpoll_process::Command;
     ///
     /// let mut cmd = Command::new("ls");
     /// cmd.env("PATH", "/bin");
@@ -618,7 +618,7 @@ impl Command {
     /// # Examples
     ///
     /// ```
-    /// use async_process::Command;
+    /// use superpoll_process::Command;
     ///
     /// let mut cmd = Command::new("ls");
     /// cmd.envs(vec![("PATH", "/bin"), ("TERM", "xterm-256color")]);
@@ -638,7 +638,7 @@ impl Command {
     /// # Examples
     ///
     /// ```
-    /// use async_process::Command;
+    /// use superpoll_process::Command;
     ///
     /// let mut cmd = Command::new("ls");
     /// cmd.env_remove("PATH");
@@ -653,7 +653,7 @@ impl Command {
     /// # Examples
     ///
     /// ```
-    /// use async_process::Command;
+    /// use superpoll_process::Command;
     ///
     /// let mut cmd = Command::new("ls");
     /// cmd.env_clear();
@@ -668,7 +668,7 @@ impl Command {
     /// # Examples
     ///
     /// ```
-    /// use async_process::Command;
+    /// use superpoll_process::Command;
     ///
     /// let mut cmd = Command::new("ls");
     /// cmd.current_dir("/");
@@ -683,7 +683,7 @@ impl Command {
     /// # Examples
     ///
     /// ```
-    /// use async_process::{Command, Stdio};
+    /// use superpoll_process::{Command, Stdio};
     ///
     /// let mut cmd = Command::new("cat");
     /// cmd.stdin(Stdio::null());
@@ -698,7 +698,7 @@ impl Command {
     /// # Examples
     ///
     /// ```
-    /// use async_process::{Command, Stdio};
+    /// use superpoll_process::{Command, Stdio};
     ///
     /// let mut cmd = Command::new("ls");
     /// cmd.stdout(Stdio::piped());
@@ -713,7 +713,7 @@ impl Command {
     /// # Examples
     ///
     /// ```
-    /// use async_process::{Command, Stdio};
+    /// use superpoll_process::{Command, Stdio};
     ///
     /// let mut cmd = Command::new("ls");
     /// cmd.stderr(Stdio::piped());
@@ -738,7 +738,7 @@ impl Command {
     /// # Examples
     ///
     /// ```
-    /// use async_process::{Command, Stdio};
+    /// use superpoll_process::{Command, Stdio};
     ///
     /// let mut cmd = Command::new("cat");
     /// cmd.reap_on_drop(false);
@@ -755,7 +755,7 @@ impl Command {
     /// # Examples
     ///
     /// ```
-    /// use async_process::{Command, Stdio};
+    /// use superpoll_process::{Command, Stdio};
     ///
     /// let mut cmd = Command::new("cat");
     /// cmd.kill_on_drop(true);
@@ -774,8 +774,8 @@ impl Command {
     /// # Examples
     ///
     /// ```no_run
-    /// # futures_lite::future::block_on(async {
-    /// use async_process::Command;
+    /// # futures::executor::block_on(async {
+    /// use superpoll_process::Command;
     ///
     /// let child = Command::new("ls").spawn()?;
     /// # std::io::Result::Ok(()) });
@@ -798,8 +798,8 @@ impl Command {
     /// # Examples
     ///
     /// ```no_run
-    /// # futures_lite::future::block_on(async {
-    /// use async_process::Command;
+    /// # futures::executor::block_on(async {
+    /// use superpoll_process::Command;
     ///
     /// let status = Command::new("cp")
     ///     .arg("a.txt")
@@ -823,8 +823,8 @@ impl Command {
     /// # Examples
     ///
     /// ```no_run
-    /// # futures_lite::future::block_on(async {
-    /// use async_process::Command;
+    /// # futures::executor::block_on(async {
+    /// use superpoll_process::Command;
     ///
     /// let child = Command::new("ls").spawn()?;
     /// # std::io::Result::Ok(()) });
